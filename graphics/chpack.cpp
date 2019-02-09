@@ -54,7 +54,7 @@ CHPack::CHPack(int x, int y) {
 
 
 
-void CHPack::draw(GLuint prog) {
+void CHPack::draw(GLuint prog, GLuint dir) {
     glm::mat4 model(1.0f);
     model = glm::translate(model, this->pos);
     
@@ -62,18 +62,26 @@ void CHPack::draw(GLuint prog) {
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
     float *memMap = (float *) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
     
-    memMap[9] = this->botX;
-    memMap[10] = this->botY;
-    memMap[20] = this->botX + bus().texWidth;
-    memMap[21] = this->botY;
-    memMap[31] = this->botX;
-    memMap[32] = this->botY + bus().texHeight;
-    memMap[42] = this->botX;
-    memMap[43] = this->botY + bus().texHeight;
-    memMap[53] = this->botX + bus().texWidth;
-    memMap[54] = this->botY + bus().texHeight;
-    memMap[64] = this->botX + bus().texWidth;
-    memMap[65] = this->botY;
+    // ensure dir <= 3
+    if (dir > 3) { dir = 3; }
+    else if (dir < 0) { dir = 0; }
+    
+    // reserve 
+    float additW = 0.0f;
+    float additH = dir * bus().texHeight;
+    
+    memMap[9] = this->botX + additW;
+    memMap[10] = this->botY + additH;
+    memMap[20] = this->botX + bus().texWidth + additW;
+    memMap[21] = this->botY + additH;
+    memMap[31] = this->botX + additW;
+    memMap[32] = this->botY + bus().texHeight + additH;
+    memMap[42] = this->botX + additW;
+    memMap[43] = this->botY + bus().texHeight + additH;
+    memMap[53] = this->botX + bus().texWidth + additW;
+    memMap[54] = this->botY + bus().texHeight + additH;
+    memMap[64] = this->botX + bus().texWidth + additW;
+    memMap[65] = this->botY + additH;
     
     for (int i = 0; i < 6; i++) {
         memMap[i * 11 + 9] /= bus().sheetWidth;

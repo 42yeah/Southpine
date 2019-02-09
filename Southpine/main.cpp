@@ -38,9 +38,8 @@ void mouseMoved(GLFWwindow *window, double x, double y) {
     dx *= bus().sensivity;
     dy *= bus().sensivity;
     
-    bus().yaw += dx;
-    
     if (!(bus().wants == glm::vec3(0.0f, bus().sun.y, 0.0f))) {
+        bus().yaw += dx;
         bus().pitch += dy;
     }
     
@@ -104,6 +103,7 @@ int main(int argc, const char * argv[]) {
     bus().win = window;
     bus().delta = 0.0f;
     bus().camSpeed = 10.0f;
+    bus().GOES_BY_PRESSING_W = false;
     
     bus().texWidth = 16;
     bus().texHeight = 16;
@@ -150,7 +150,11 @@ int main(int argc, const char * argv[]) {
         
         // and moving around
         if (pressed(GLFW_KEY_W)) {
-            bus().wants += bus().front * bus().delta * bus().camSpeed;
+            if (!bus().GOES_BY_PRESSING_W) {
+                bus().wants += bus().front * bus().delta * bus().camSpeed;
+            }
+        } else if (bus().GOES_BY_PRESSING_W) {
+            bus().GOES_BY_PRESSING_W = false;
         }
         if (pressed(GLFW_KEY_S)) {
             bus().wants -= bus().front * bus().delta * bus().camSpeed;
@@ -167,6 +171,9 @@ int main(int argc, const char * argv[]) {
         
         if (bus().wants.y >= bus().sun.y) {
             bus().wants = { 0.0f, bus().sun.y, 0.0f };
+            if (pressed(GLFW_KEY_W)) {
+                bus().GOES_BY_PRESSING_W = true;
+            }
         } else if (bus().wants.y <= 1.0f) { bus().wants.y = 1.0f; }
         
         
@@ -215,7 +222,7 @@ int main(int argc, const char * argv[]) {
         glUniform3fv(glGetUniformLocation(chProg, "sunColor"), 1, glm::value_ptr(bus().sunColor));
         glUniform3fv(glGetUniformLocation(chProg, "eye"), 1, glm::value_ptr(bus().eye));
         
-        steve.draw(chProg);
+        steve.draw(chProg, 1);
         
         
         glfwSwapBuffers(window);

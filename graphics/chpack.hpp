@@ -21,7 +21,7 @@ class CHPack {
 public:
     CHPack(int x, int y);
     
-    void draw(GLuint prog);
+    void draw(GLuint prog, GLuint dir);
     
     
     int x, y;

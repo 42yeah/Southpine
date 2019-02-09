@@ -34,6 +34,9 @@ struct bus {
     GLuint chSheet;
     int texWidth, texHeight;
     int sheetWidth, sheetHeight;
+    
+    
+    bool GOES_BY_PRESSING_W;
 };
 
 

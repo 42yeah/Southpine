@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		185A342E220E888B00A48ECE /* libglfw.3.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185A342D220E888B00A48ECE /* libglfw.3.2.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F10A0DA32205571800E871D7 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F10A0DA22205571800E871D7 /* main.cpp */; };
 		F10A0DAB2205572200E871D7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F10A0DAA2205572200E871D7 /* Cocoa.framework */; };
 		F10A0DAD2205572800E871D7 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F10A0DAC2205572800E871D7 /* IOKit.framework */; };
 		F10A0DAF2205572D00E871D7 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F10A0DAE2205572D00E871D7 /* CoreVideo.framework */; };
 		F10A0DB12205573200E871D7 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F10A0DB02205573200E871D7 /* OpenGL.framework */; };
-		F10A0DB32205582F00E871D7 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F10A0DB22205582F00E871D7 /* libglfw3.a */; };
 		F10A0DB52205593400E871D7 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = F10A0DB42205593400E871D7 /* glad.c */; };
 		F10A0DB9220559DD00E871D7 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F10A0DB7220559DD00E871D7 /* shader.cpp */; };
 		F10A0DBC22055B9300E871D7 /* utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F10A0DBA22055B9300E871D7 /* utility.cpp */; };
@@ -33,6 +33,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		185A342D220E888B00A48ECE /* libglfw.3.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.2.dylib; path = ../../../../usr/local/Cellar/glfw/3.2.1/lib/libglfw.3.2.dylib; sourceTree = "<group>"; };
 		F10A0D9F2205571800E871D7 /* Southpine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Southpine; sourceTree = BUILT_PRODUCTS_DIR; };
 		F10A0DA22205571800E871D7 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		F10A0DAA2205572200E871D7 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -65,7 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F10A0DB32205582F00E871D7 /* libglfw3.a in Frameworks */,
+				185A342E220E888B00A48ECE /* libglfw.3.2.dylib in Frameworks */,
 				F10A0DB12205573200E871D7 /* OpenGL.framework in Frameworks */,
 				F10A0DAF2205572D00E871D7 /* CoreVideo.framework in Frameworks */,
 				F10A0DAD2205572800E871D7 /* IOKit.framework in Frameworks */,
@@ -110,6 +111,7 @@
 		F10A0DA92205572200E871D7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				185A342D220E888B00A48ECE /* libglfw.3.2.dylib */,
 				F10A0DB22205582F00E871D7 /* libglfw3.a */,
 				F10A0DB02205573200E871D7 /* OpenGL.framework */,
 				F10A0DAE2205572D00E871D7 /* CoreVideo.framework */,
@@ -361,7 +363,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = KL2JALR869;
 				HEADER_SEARCH_PATHS = /usr/local/include;
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					/usr/local/Cellar/glfw/3.2.1/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -372,7 +377,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = KL2JALR869;
 				HEADER_SEARCH_PATHS = /usr/local/include;
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					/usr/local/Cellar/glfw/3.2.1/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
