@@ -46,6 +46,9 @@ void mouseMoved(GLFWwindow *window, double x, double y) {
     if (bus().pitch >= 89.9f) { bus().pitch = 89.9f; }
     if (bus().pitch <= -89.9f) { bus().pitch = -89.9f; }
     
+    if (bus().yaw >= 360.0f) { bus().yaw -= 360.0f; }
+    if (bus().yaw <= -360.0f) { bus().yaw += 360.0f; }
+    
     recalcFront();
 
     bus().prevX = x;
@@ -125,16 +128,25 @@ int main(int argc, const char * argv[]) {
     glGenBuffers(1, &uMatrices);
     glBindBuffer(GL_UNIFORM_BUFFER, uMatrices);
     glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4) * 2, nullptr, GL_DYNAMIC_DRAW);
-    glBindBufferBase(GL_UNIFORM_BUFFER, 0, uMatrices);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, uMatrices, 0, sizeof(glm::mat4) * 2);
+    
+    GLuint uSun;
+    glGenBuffers(1, &uSun);
+    glBindBuffer(GL_UNIFORM_BUFFER, uSun);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::vec4) * 3, nullptr, GL_DYNAMIC_DRAW);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 1, uSun, 0, sizeof(glm::vec4) * 3);
     
     GLuint field = genField();
     GLuint fieldProg = program("shaders/vworld.glsl", "shaders/fworld.glsl");
     glUniformBlockBinding(fieldProg, glGetUniformBlockIndex(fieldProg, "Matrices"), 0);
+    glUniformBlockBinding(fieldProg, glGetUniformBlockIndex(fieldProg, "Sun"), 1);
     GLuint chProg = program("shaders/vch.glsl", "shaders/fch.glsl");
     glUniformBlockBinding(chProg, glGetUniformBlockIndex(chProg, "Matrices"), 0);
+    glUniformBlockBinding(chProg, glGetUniformBlockIndex(chProg, "Sun"), 1);
+    
     
     CHPack steve(0, 0);
-    steve.pos = glm::vec3(0.0, 2.0f, 0.0f);
+    steve.pos = glm::vec3(0.0, 0.5f, 0.0f);
     
     // handle events, update, render, swap
     float prev = glfwGetTime();
@@ -174,13 +186,12 @@ int main(int argc, const char * argv[]) {
             if (pressed(GLFW_KEY_W)) {
                 bus().GOES_BY_PRESSING_W = true;
             }
-        } else if (bus().wants.y <= 1.0f) { bus().wants.y = 1.0f; }
+        } else if (bus().wants.y <= 0.5f) { bus().wants.y = 0.5f; }
         
         
         // update
         glm::vec3 deltaPos = bus().wants - bus().eye;
         bus().eye += deltaPos * bus().camSpeed * bus().delta;
-        
         bus().view = glm::lookAt(bus().eye, bus().eye + bus().front, bus().up);
         
         // however, if wants == orthopos, then switch
@@ -195,20 +206,24 @@ int main(int argc, const char * argv[]) {
         
         
         glBindBuffer(GL_UNIFORM_BUFFER, uMatrices);
-        char *VPdat = (char *) glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
-        memcpy(VPdat, glm::value_ptr(bus().view), sizeof(glm::mat4));
-        memcpy(VPdat + sizeof(glm::mat4), glm::value_ptr(bus().perspec), sizeof(glm::mat4));
+        char *VPDat = (char *) glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
+        memcpy(VPDat, glm::value_ptr(bus().view), sizeof(glm::mat4));
+        memcpy(VPDat + sizeof(glm::mat4), glm::value_ptr(bus().perspec), sizeof(glm::mat4));
         glUnmapBuffer(GL_UNIFORM_BUFFER);
         
+        
+        glBindBuffer(GL_UNIFORM_BUFFER, uSun);
+        char *sunDat = (char *) glMapBuffer(GL_UNIFORM_BUFFER, GL_WRITE_ONLY);
+        memcpy(sunDat, glm::value_ptr(bus().sun), sizeof(glm::vec3));
+        memcpy(sunDat + sizeof(glm::vec4), glm::value_ptr(bus().sunColor), sizeof(glm::vec3));
+        memcpy(sunDat + sizeof(glm::vec4) * 2, glm::value_ptr(bus().eye), sizeof(glm::vec3));
+        glUnmapBuffer(GL_UNIFORM_BUFFER);
         
         // render
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         glUseProgram(fieldProg);
         glUniformMatrix4fv(glGetUniformLocation(fieldProg, "model"), 1, GL_FALSE, glm::value_ptr(defaultModel));
-        glUniform3fv(glGetUniformLocation(fieldProg, "sunPos"), 1, glm::value_ptr(bus().sun));
-        glUniform3fv(glGetUniformLocation(fieldProg, "sunColor"), 1, glm::value_ptr(bus().sunColor));
-        glUniform3fv(glGetUniformLocation(fieldProg, "eye"), 1, glm::value_ptr(bus().eye));
         
         glBindVertexArray(field);
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -218,11 +233,12 @@ int main(int argc, const char * argv[]) {
         chMod = glm::translate(chMod, glm::vec3(0.0f, 0.1f, 0.0f));
         glUseProgram(chProg);
         glUniformMatrix4fv(glGetUniformLocation(chProg, "model"), 1, GL_FALSE, glm::value_ptr(defaultModel));
-        glUniform3fv(glGetUniformLocation(chProg, "sunPos"), 1, glm::value_ptr(bus().sun));
-        glUniform3fv(glGetUniformLocation(chProg, "sunColor"), 1, glm::value_ptr(bus().sunColor));
-        glUniform3fv(glGetUniformLocation(chProg, "eye"), 1, glm::value_ptr(bus().eye));
         
-        steve.draw(chProg, 1);
+        if (bus().wants == glm::vec3(0.0f, bus().sun.y, 0.0f)) {
+            steve.draw(chProg, 4);
+        } else {
+            steve.draw(chProg, 1);
+        }
         
         
         glfwSwapBuffers(window);

@@ -7,9 +7,11 @@ in vec3 vColor;
 
 out vec4 color;
 
-uniform vec3 sunPos;
-uniform vec3 sunColor;
-uniform vec3 eye;
+layout (std140) uniform Sun {
+    vec3 sunPos;
+    vec3 sunColor;
+    vec3 eye;
+};
 
 
 void main() {

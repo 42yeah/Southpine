@@ -17,11 +17,22 @@ layout (std140) uniform Matrices {
 };
 
 
+uniform int dir;
+uniform mat4 overrideView;
+
+
 
 void main() {
-    gl_Position = perspec * view * model * vec4(aPos, 1.0);
-    pos = vec3(model * vec4(aPos, 1.0));
-    normal = vec3(model * vec4(aNormal, 1.0));
-    texCoord = aTexCoord;
+    if (dir == 4) {
+        gl_Position = perspec * view * model * vec4(aPos, 1.0);
+        pos = vec3(model * vec4(aPos, 1.0));
+        normal = vec3(model * vec4(aNormal, 1.0));
+        texCoord = aTexCoord;
+    } else {
+        gl_Position = perspec * overrideView * model * vec4(aPos, 1.0);
+        pos = vec3(model * vec4(aPos, 1.0));
+        normal = vec3(model * vec4(aNormal, 1.0));
+        texCoord = aTexCoord;
+    }
 }
 

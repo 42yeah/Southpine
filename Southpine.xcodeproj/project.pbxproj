@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		185A342E220E888B00A48ECE /* libglfw.3.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 185A342D220E888B00A48ECE /* libglfw.3.2.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F10A0DA32205571800E871D7 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F10A0DA22205571800E871D7 /* main.cpp */; };
 		F10A0DAB2205572200E871D7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F10A0DAA2205572200E871D7 /* Cocoa.framework */; };
 		F10A0DAD2205572800E871D7 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F10A0DAC2205572800E871D7 /* IOKit.framework */; };
 		F10A0DAF2205572D00E871D7 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F10A0DAE2205572D00E871D7 /* CoreVideo.framework */; };
-		F10A0DB12205573200E871D7 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F10A0DB02205573200E871D7 /* OpenGL.framework */; };
 		F10A0DB52205593400E871D7 /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = F10A0DB42205593400E871D7 /* glad.c */; };
 		F10A0DB9220559DD00E871D7 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F10A0DB7220559DD00E871D7 /* shader.cpp */; };
 		F10A0DBC22055B9300E871D7 /* utility.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F10A0DBA22055B9300E871D7 /* utility.cpp */; };
 		F10A0DC6220561B000E871D7 /* bus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F10A0DC4220561B000E871D7 /* bus.cpp */; };
 		F10A0DD6220B1FB200E871D7 /* chpack.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F10A0DD4220B1FB200E871D7 /* chpack.cpp */; };
+		F143BE1C22100C43006EC816 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F10A0DB22205582F00E871D7 /* libglfw3.a */; settings = {ATTRIBUTES = (Required, ); }; };
+		F143BE1D22100C72006EC816 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F10A0DB02205573200E871D7 /* OpenGL.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -66,8 +66,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				185A342E220E888B00A48ECE /* libglfw.3.2.dylib in Frameworks */,
-				F10A0DB12205573200E871D7 /* OpenGL.framework in Frameworks */,
+				F143BE1D22100C72006EC816 /* OpenGL.framework in Frameworks */,
+				F143BE1C22100C43006EC816 /* libglfw3.a in Frameworks */,
 				F10A0DAF2205572D00E871D7 /* CoreVideo.framework in Frameworks */,
 				F10A0DAD2205572800E871D7 /* IOKit.framework in Frameworks */,
 				F10A0DAB2205572200E871D7 /* Cocoa.framework in Frameworks */,

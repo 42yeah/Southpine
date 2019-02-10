@@ -58,6 +58,10 @@ void CHPack::draw(GLuint prog, GLuint dir) {
     glm::mat4 model(1.0f);
     model = glm::translate(model, this->pos);
     
+    int rdir = dir;
+    if (dir < 4) { model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)); }
+    else { dir = 1; }
+    
     glBindVertexArray(this->VAO);
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
     float *memMap = (float *) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
@@ -69,19 +73,37 @@ void CHPack::draw(GLuint prog, GLuint dir) {
     // reserve 
     float additW = 0.0f;
     float additH = dir * bus().texHeight;
+    if (dir == 3) { additH = 0.0f; }
     
-    memMap[9] = this->botX + additW;
-    memMap[10] = this->botY + additH;
-    memMap[20] = this->botX + bus().texWidth + additW;
-    memMap[21] = this->botY + additH;
-    memMap[31] = this->botX + additW;
-    memMap[32] = this->botY + bus().texHeight + additH;
-    memMap[42] = this->botX + additW;
-    memMap[43] = this->botY + bus().texHeight + additH;
-    memMap[53] = this->botX + bus().texWidth + additW;
-    memMap[54] = this->botY + bus().texHeight + additH;
-    memMap[64] = this->botX + bus().texWidth + additW;
-    memMap[65] = this->botY + additH;
+    
+    if (dir < 3) {
+        memMap[9] = this->botX + additW;
+        memMap[10] = this->botY + additH;
+        memMap[20] = this->botX + bus().texWidth + additW;
+        memMap[21] = this->botY + additH;
+        memMap[31] = this->botX + additW;
+        memMap[32] = this->botY + bus().texHeight + additH;
+        memMap[42] = this->botX + additW;
+        memMap[43] = this->botY + bus().texHeight + additH;
+        memMap[53] = this->botX + bus().texWidth + additW;
+        memMap[54] = this->botY + bus().texHeight + additH;
+        memMap[64] = this->botX + bus().texWidth + additW;
+        memMap[65] = this->botY + additH;
+    } else {
+        memMap[9] = this->botX + bus().texWidth + additW;
+        memMap[10] = this->botY + additH;
+        memMap[20] = this->botX + additW;
+        memMap[21] = this->botY + additH;
+        memMap[31] = this->botX + bus().texWidth + additW;
+        memMap[32] = this->botY + bus().texHeight + additH;
+        memMap[42] = this->botX + bus().texWidth + additW;
+        memMap[43] = this->botY + bus().texHeight + additH;
+        memMap[53] = this->botX + additW;
+        memMap[54] = this->botY + bus().texHeight + additH;
+        memMap[64] = this->botX + additW;
+        memMap[65] = this->botY + additH;
+    }
+    
     
     for (int i = 0; i < 6; i++) {
         memMap[i * 11 + 9] /= bus().sheetWidth;
@@ -93,7 +115,18 @@ void CHPack::draw(GLuint prog, GLuint dir) {
     
     glUseProgram(prog);
     
-    glUniformMatrix4fv(glGetUniformLocation(prog, "model"), 1, GL_FALSE, value_ptr(model));
+    glUniformMatrix4fv(glGetUniformLocation(prog, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    
+    glm::mat4 viewMat = bus().view;
+    for (int row = 0; row < 3; row += 2) {
+        for (int col = 0; col < 3; col++) {
+            viewMat[row][col] = (row == col) ? 1 : 0;
+        }
+    }
+    
+    glUniformMatrix4fv(glGetUniformLocation(prog, "overrideView"), 1, GL_FALSE, glm::value_ptr(viewMat));
+    
+    glUniform1i(glGetUniformLocation(prog, "dir"), rdir);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, bus().chSheet);
