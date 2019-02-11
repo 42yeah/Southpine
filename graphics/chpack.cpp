@@ -56,10 +56,11 @@ CHPack::CHPack(int x, int y) {
 
 void CHPack::draw(GLuint prog, GLuint dir) {
     glm::mat4 model(1.0f);
+    glm::mat4 rotation(1.0f);
     model = glm::translate(model, this->pos);
     
     int rdir = dir;
-    if (dir < 4) { model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)); }
+    if (dir < 4) { rotation = glm::rotate(rotation, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)); }
     else { dir = 1; }
     
     glBindVertexArray(this->VAO);
@@ -115,16 +116,19 @@ void CHPack::draw(GLuint prog, GLuint dir) {
     
     glUseProgram(prog);
     
-    glUniformMatrix4fv(glGetUniformLocation(prog, "model"), 1, GL_FALSE, glm::value_ptr(model));
-    
     glm::mat4 viewMat = bus().view;
+    glm::mat4 modelView = viewMat * model;
+    
     for (int row = 0; row < 3; row += 2) {
         for (int col = 0; col < 3; col++) {
-            viewMat[row][col] = (row == col) ? 1 : 0;
+            modelView[row][col] = (row == col) ? 1 : 0;
+//            model[row][col] = (row == col) ? 1 : 0;
         }
     }
+    modelView = modelView * rotation;
     
-    glUniformMatrix4fv(glGetUniformLocation(prog, "overrideView"), 1, GL_FALSE, glm::value_ptr(viewMat));
+    glUniformMatrix4fv(glGetUniformLocation(prog, "model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(glGetUniformLocation(prog, "modelView"), 1, GL_FALSE, glm::value_ptr(modelView));
     
     glUniform1i(glGetUniformLocation(prog, "dir"), rdir);
 

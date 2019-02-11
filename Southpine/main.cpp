@@ -10,6 +10,7 @@
 #include <iostream>
 #include "../ext/glad/glad.h"
 #include <GLFW/glfw3.h>
+#include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -145,8 +146,12 @@ int main(int argc, const char * argv[]) {
     glUniformBlockBinding(chProg, glGetUniformBlockIndex(chProg, "Sun"), 1);
     
     
-    CHPack steve(0, 0);
-    steve.pos = glm::vec3(0.0, 0.5f, 0.0f);
+    std::vector<CHPack> chs;
+    for (int i = 0; i < 5000; i++) {
+        CHPack guy = CHPack(i % 13, i * 3);
+        guy.pos = { (sinf(i) * i) / 100.0f, 0.5f, (cosf(i) * i) / 100.0f };
+        chs.push_back(guy);
+    }
     
     // handle events, update, render, swap
     float prev = glfwGetTime();
@@ -234,10 +239,12 @@ int main(int argc, const char * argv[]) {
         glUseProgram(chProg);
         glUniformMatrix4fv(glGetUniformLocation(chProg, "model"), 1, GL_FALSE, glm::value_ptr(defaultModel));
         
-        if (bus().wants == glm::vec3(0.0f, bus().sun.y, 0.0f)) {
-            steve.draw(chProg, 4);
-        } else {
-            steve.draw(chProg, 1);
+        for (int i = 0; i < chs.size(); i++) {
+            if (bus().wants == glm::vec3(0.0f, bus().sun.y, 0.0f)) {
+                chs[i].draw(chProg, 4);
+            } else {
+                chs[i].draw(chProg, 1);
+            }
         }
         
         

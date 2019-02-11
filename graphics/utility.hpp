@@ -10,9 +10,11 @@
 #define utility_hpp
 
 #include "../ext/glad/glad.h"
+#include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
 #include <map>
 #include <iostream>
+#include <vector>
 
 
 GLuint testTriangle();
@@ -24,6 +26,8 @@ GLuint genField();
 GLuint genRect();
 
 GLuint loadTex(std::string path, int *oWidth = nullptr, int *oHeight = nullptr);
+
+void genGrass(std::vector<float> array, glm::vec3 color);
 
 
 float aspect(GLFWwindow *window);

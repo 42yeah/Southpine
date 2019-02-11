@@ -102,12 +102,12 @@ GLuint genField() {
     GLuint VAO, VBO;
     
     float buffer[] = {
-        -10.0f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 0.486f, 0.988f, 0.01f,
-        10.0f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 0.486f, 0.988f, 0.01f,
-        -10.0f, 0.0f, 10.0f, 0.0f, 1.0f, 0.0f, 0.486f, 0.988f, 0.01f,
-        -10.0f, 0.0f, 10.0f, 0.0f, 1.0f, 0.0f, 0.486f, 0.988f, 0.01f,
-        10.0f, 0.0f, 10.0f, 0.0f, 1.0f, 0.0f, 0.486f, 0.988f, 0.01f,
-        10.0f, 0.0f, -10.0f, 0.0f, 1.0f, 0.0f, 0.486f, 0.988f, 0.01f,
+        -50.0f, 0.0f, -50.0f, 0.0f, 1.0f, 0.0f, 0.415f, 0.286f, 0.2f,
+        50.0f, 0.0f, -50.0f, 0.0f, 1.0f, 0.0f, 0.415f, 0.286f, 0.2f,
+        -50.0f, 0.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.415f, 0.286f, 0.2f,
+        -50.0f, 0.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.415f, 0.286f, 0.2f,
+        50.0f, 0.0f, 50.0f, 0.0f, 1.0f, 0.0f, 0.415f, 0.286f, 0.2f,
+        50.0f, 0.0f, -50.0f, 0.0f, 1.0f, 0.0f, 0.415f, 0.286f, 0.2f,
     };
     
     glGenVertexArrays(1, &VAO);
@@ -200,3 +200,7 @@ GLuint loadTex(std::string path, int *oWidth, int *oHeight) {
 }
 
 
+
+void genGrass(std::vector<float> array, glm::vec3 color) {
+    // a rect somewhere between 
+}
